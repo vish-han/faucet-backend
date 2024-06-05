@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 })
 
-app.post('/faucet', async (req, res) => {
+app.post('/', async (req, res) => {
     try {
         const { address } = req.body;
         
