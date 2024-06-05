@@ -1,0 +1,115 @@
+const express = require('express');
+const cors = require('cors');
+const { Web3 } = require('web3');
+const app = express();
+const FaucetAddress = '0xB50bC4F2a213e0DEa9D7B44bCBb5acF921c8A1a1';
+const PrivateKey = '9c8eb6b23de894cd1e01f8ef2718d6ea2f3d7dfa9393719c64194e04d800f22c'
+app.use(cors());
+app.use(express.json());
+
+const web3 = new Web3('https://testnet-rpc.layeredge.io');
+
+app.get('/', (req, res) => {
+    res.send('Hello World');
+})
+
+app.post('/faucet', async (req, res) => {
+    try {
+        const { address } = req.body;
+        
+        // Check balance of FaucetAddress to ensure sufficient funds
+        const balance = await web3.eth.getBalance(FaucetAddress);
+        console.log(balance);
+        const gasLimit = 21000000; // Typical gas limit for a simple ETH transfer
+        const gasPrice = web3.utils.toWei('20', 'gwei');
+        const value = web3.utils.toWei('0.001', 'ether');
+        const totalCost = BigInt(value) + BigInt(gasLimit) * BigInt(gasPrice);
+
+        if (BigInt(balance) < totalCost) {
+            return res.json({
+                error: 'Insufficient funds in the faucet address.'
+            });
+        }
+
+        const tx = {
+            from: FaucetAddress,
+            to: address,
+            value: value,
+            gas: gasLimit,
+            gasPrice: gasPrice,
+        };
+
+        const signedTx = await web3.eth.accounts.signTransaction(tx, PrivateKey);
+        const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        console.log(txReceipt);
+        res.json({
+            status: 'success',
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error: error.message
+        });
+    }
+});
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});const express = require('express');
+const cors = require('cors');
+const { Web3 } = require('web3');
+const app = express();
+const FaucetAddress = '0xB50bC4F2a213e0DEa9D7B44bCBb5acF921c8A1a1';
+const PrivateKey = '9c8eb6b23de894cd1e01f8ef2718d6ea2f3d7dfa9393719c64194e04d800f22c'
+app.use(cors());
+app.use(express.json());
+
+const web3 = new Web3('https://testnet-rpc.layeredge.io');
+
+app.get('/', (req, res) => {
+    res.send('Hello World');
+})
+
+app.post('/faucet', async (req, res) => {
+    try {
+        const { address } = req.body;
+        
+        // Check balance of FaucetAddress to ensure sufficient funds
+        const balance = await web3.eth.getBalance(FaucetAddress);
+        console.log(balance);
+        const gasLimit = 21000000; // Typical gas limit for a simple ETH transfer
+        const gasPrice = web3.utils.toWei('20', 'gwei');
+        const value = web3.utils.toWei('0.001', 'ether');
+        const totalCost = BigInt(value) + BigInt(gasLimit) * BigInt(gasPrice);
+
+        if (BigInt(balance) < totalCost) {
+            return res.json({
+                error: 'Insufficient funds in the faucet address.'
+            });
+        }
+
+        const tx = {
+            from: FaucetAddress,
+            to: address,
+            value: value,
+            gas: gasLimit,
+            gasPrice: gasPrice,
+        };
+
+        const signedTx = await web3.eth.accounts.signTransaction(tx, PrivateKey);
+        const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        console.log(txReceipt);
+        res.json({
+            status: 'success',
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error: error.message
+        });
+    }
+});
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
+
+module.exports = app;
