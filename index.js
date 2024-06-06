@@ -22,7 +22,7 @@ app.post('/', async (req, res) => {
         console.log(balance);
         const gasLimit = 21000000; // Typical gas limit for a simple ETH transfer
         const gasPrice = web3.utils.toWei('20', 'gwei');
-        const value = web3.utils.toWei('0.001', 'ether');
+        const value = web3.utils.toWei('0.1', 'ether');
         const totalCost = BigInt(value) + BigInt(gasLimit) * BigInt(gasPrice);
 
         if (BigInt(balance) < totalCost) {
