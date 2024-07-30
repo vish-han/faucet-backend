@@ -12,8 +12,8 @@ const web3 = new Web3('https://testnet-rpc.layeredge.io');
 
 // Set up rate limiter: maximum of 2 requests per IP within a 24-hour period
 const limiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-    max: 2, // limit each IP to 2 requests per windowMs
+    windowMs: 24 * 60 * 60 * 1000, 
+    max: 4, 
     message: 'You have exceeded the 2 requests in 24 hrs limit!', 
     headers: true,
 });
